@@ -3,199 +3,269 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <meta http-equiv="refresh" content="2; URL="> -->
     <title>オンラインユーザー</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        color: #333;
+      :root {
+        --bg-color: #121212;
+        --text-color: #e0e0e0;
+        --accent-color: #03a9f4;
+        --card-bg: #1e1e1e;
+        --input-bg: #2d2d2d;
+        --border-color: #333;
+        --success: #4caf50;
+        --error: #f44336;
+      }
+      
+      * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        color: var(--accent-color);
+        border-bottom: 2px solid var(--accent-color);
+        padding-bottom: 0.5rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+        margin: 1.5rem 0 1rem;
+        color: var(--accent-color);
+      }
+      
+      .card {
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+      
+      p {
+        margin-bottom: 1rem;
+      }
+      
+      a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      
+      a:hover {
+        text-decoration: underline;
+        color: #29b6f6;
+      }
+      
+      .url-form {
         display: flex;
         flex-direction: column;
+        gap: 0.8rem;
+      }
+      
+      .input-group {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+      }
+      
+      input {
+        flex: 1;
+        padding: 0.8rem;
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      
+      input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+      }
+      
+      button {
+        padding: 0.8rem 1.5rem;
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+      }
+      
+      button:hover {
+        background-color: #0288d1;
+      }
+      
+      .refresh-btn {
+        display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 100vh;
-        box-sizing: border-box; /* スクロールバーのズレ対策 */
-      }
-    
-      h1 {
-        color: #4caf50;
-        text-align: center;
-        font-size: 2em; /* モバイルでも読みやすいサイズに */
-      }
-    
-      input,
-      button {
-        padding: 10px;
-        margin: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-        width: 100%; /* モバイル画面に合わせるために幅を100%に */
-        box-sizing: border-box;
-      }
-    
-      button {
-        background-color: #4caf50;
-        color: white;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        padding: 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
         cursor: pointer;
       }
-    
-      button:hover {
-        background-color: #45a049;
+      
+      .refresh-btn:hover {
+        background-color: #333;
       }
-    
-      .fa-refresh {
-        cursor: pointer;
+      
+      .refresh-btn i {
+        margin-right: 0.5rem;
       }
-    
-      #time {
-        font-size: 18px;
-        margin: 20px 0;
-      }
-    
-      ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        max-width: 600px;
-        height: 1000px; /* モバイル表示用に高さを調整 */
-        overflow-y: auto;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: #fff;
-      }
-    
-      li {
-        background-color: #fff;
-        margin: 5px 0;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-        
-      }
-    
+      
       #error {
-        color: red;
+        background-color: rgba(244, 67, 54, 0.2);
+        color: var(--error);
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+      }
+      
+      .comment-list {
+        list-style-type: none;
+      }
+      
+      .comment-item {
+        background-color: var(--card-bg);
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 0.8rem;
+        border-left: 3px solid var(--accent-color);
+      }
+      
+      .comment-name {
         font-weight: bold;
+        color: var(--accent-color);
       }
-    
-      .how img {
-        max-width: 600px; /* 画像の最大幅を設定 */
-        width: 100%; /* 幅を100%にして親要素に合わせる */
-        height: auto; /* 高さは自動調整 */
+      
+      .no-comments {
+        text-align: center;
+        padding: 2rem;
+        color: #888;
+        font-style: italic;
       }
-    
-      /* モバイル用のスタイル */
+      
+      #time {
+        text-align: right;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #888;
+      }
+      
       @media (max-width: 600px) {
         body {
-          padding: 10px;
+          padding: 15px;
         }
-    
+        
+        .input-group {
+          flex-direction: column;
+        }
+        
         h1 {
-          font-size: 1.5em;
-        }
-    
-        ul {
-          height: 1000px; /* モバイル表示用にリストの高さをさらに調整 */
-        }
-    
-        input,
-        button {
-          font-size: 14px;
-        }
-    
-        .how img {
-          max-width: 100%; /* スマホの画面幅に合わせて画像を縮小 */
-          height: auto;
+          font-size: 1.8rem;
         }
       }
     </style>
-    
   </head>
   <body>
     <h1>コメント一覧</h1>
-    <div class="how">
+    
+    <div class="card">
       <h2>使い方</h2>
-      <p><a href="https://liveid.saipi1129.com/">UserIDから配信中のURLを取得するツール</a>からURLをコピーして貼り付け</p>
-      <p>または、<a href="">公式サイト</a>からリンクをコピーして貼り付け</p>
-      <!-- <img src="images/example.png" alt="" >  -->
+      <p><a href="https://liveid.saipi1129.com/" target="_blank">UserIDから配信中のURLを取得するツール</a>からURLをコピーして貼り付け</p>
+      <p>または、<a href="" target="_blank">公式サイト</a>からリンクをコピーして貼り付け</p>
     </div>
-
-
-    <form action="/liveid" method="POST">
-      <label for="liveid">URL:</label>
-      <input name="liveid" value=""></input>
-      <button type="submit">送信</button>
-      <a onclick="window.location.reload(true);">
-        <i class="fa-refresh" aria-hidden="true"></i><span>更新</span>
-      </a>
-    </form>
-
-
-
+    
+    <div class="card">
+      <form action="/liveid" method="POST" class="url-form">
+        <div class="input-group">
+          <input name="liveid" placeholder="配信URLを入力してください" value=""></input>
+          <button type="submit">送信</button>
+          <a class="refresh-btn" onclick="window.location.reload(true);">
+            <i class="fa fa-refresh" aria-hidden="true"></i><span>更新</span>
+          </a>
+        </div>
+      </form>
+    </div>
+    
     {% if error %}
     <div id="error">{{ error }}</div>
     {% endif %}
     
-    {% if names %}
-    <ul>
-      {% for item in comment_list %}
-      <li>{{ item.name }} : {{ item.comment }}</li>
-    {% endfor %}
+    <div class="card">
+      {% if names %}
+      <ul class="comment-list">
+        {% for item in comment_list %}
+        <li class="comment-item"><span class="comment-name">{{ item.name }}</span> : {{ item.comment }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="no-comments">コメントはまだありません。</p>
+      {% endif %}
+    </div>
     
-    </ul>
-    {% else %}
-      <p>No users found.</p>
-    {% endif %}
-
     {% if hour is not none %}
     <div id="time">
       更新時刻: {{ time }}
     </div>
     {% endif %}
-  </body>
-  <script>
-    let reloadInterval;
-  
-    // リロードを開始する関数
-    function startAutoReload() {
-      if (!reloadInterval) {
-        reloadInterval = setInterval(function() {
-          window.location.reload(true);
-        }, 30000); // 30秒ごとにリロード
-      }
-    }
-  
-    // リロードを停止する関数
-    function stopAutoReload() {
-      if (reloadInterval) {
-        clearInterval(reloadInterval);
-        reloadInterval = null;
-      }
-    }
-  
-    // 現在のURLが /liveid であるかをチェックして、リロードを設定
-    if (window.location.pathname === '/liveid') {
-      const imgElement = document.querySelector('.how img');
-      if (imgElement) {
-        imgElement.style.display = 'none'; // 画像を隠す
-      }
-      // ページが非アクティブになった場合の処理
-      document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') {
-          // タブがアクティブになったらリロードを再開
-          startAutoReload();
-        } else {
-          // タブが非アクティブになったらリロードを停止
-          stopAutoReload();
+    
+    <script>
+      let reloadInterval;
+      
+      // リロードを開始する関数
+      function startAutoReload() {
+        if (!reloadInterval) {
+          reloadInterval = setInterval(function() {
+            window.location.reload(true);
+          }, 30000); // 30秒ごとにリロード
         }
-      });
-  
-      // ページ読み込み時にリロードを開始
-      startAutoReload();
-    }
-  </script>
+      }
+      
+      // リロードを停止する関数
+      function stopAutoReload() {
+        if (reloadInterval) {
+          clearInterval(reloadInterval);
+          reloadInterval = null;
+        }
+      }
+      
+      // 現在のURLが /liveid であるかをチェックして、リロードを設定
+      if (window.location.pathname === '/liveid') {
+        // ページが非アクティブになった場合の処理
+        document.addEventListener('visibilitychange', function() {
+          if (document.visibilityState === 'visible') {
+            // タブがアクティブになったらリロードを再開
+            startAutoReload();
+          } else {
+            // タブが非アクティブになったらリロードを停止
+            stopAutoReload();
+          }
+        });
+        
+        // ページ読み込み時にリロードを開始
+        startAutoReload();
+      }
+    </script>
+  </body>
 </html>
